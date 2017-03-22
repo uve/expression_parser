@@ -1,0 +1,1 @@
+make && nohup start > ~/prime_logs.txt 2>&1&
