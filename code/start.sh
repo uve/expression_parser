@@ -1,1 +1,2 @@
-make && nohup start > ~/prime_logs.txt 2>&1&
+#!/bin/bash
+nohup ./test > ~/prime_logs.txt 2>&1&
