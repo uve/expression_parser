@@ -27,6 +27,8 @@ void parser_test( const char *expr ){
 #define OPEN_BRACKET 0xE
 #define CLOSE_BRACKET 0xF
 
+#define SHOW_LOGS 0
+
 
 const char* SYMBOLS[] = {"N", "1", "2", "3", "4", "5", "exp", "log", "sqrt",
 			 "+", "-", "*", "/", "^",
@@ -37,10 +39,9 @@ const double OUTPUT[] = {11, 17, 29};
 const int64_t REPORT_SIZE = 0xFFFFFF;
 
 const int64_t END_POINT = 0xFFFFFFFFFFFF;
-const int64_t START_POINT = 0x1871fffffb;
+const int64_t START_POINT = 0x0;//58bffffff//0x1871fffffb;
 
 #define STACK_MAX 100
-
 
 struct Stack {
     double_t     data[STACK_MAX];
@@ -57,7 +58,7 @@ void Stack_Init(Stack *S)
 double_t Stack_Top(Stack *S)
 {
     if (S->size == 0) {
-        fprintf(stderr, "Error: stack empty\n");
+        //fprintf(stderr, "Error: stack empty\n");
         return -1;
     }
 
@@ -66,18 +67,20 @@ double_t Stack_Top(Stack *S)
 
 void Stack_Push(Stack *S, double_t d)
 {
-    if (S->size < STACK_MAX)
+    if (S->size < STACK_MAX) {
         S->data[S->size++] = d;
-    else
-        fprintf(stderr, "Error: stack full\n");
+	} else {
+        //fprintf(stderr, "Error: stack full\n");
+	}
 }
 
 void Stack_Pop(Stack *S)
 {
-    if (S->size == 0)
-        fprintf(stderr, "Error: stack empty\n");
-    else
+    if (S->size == 0) {
+        //fprintf(stderr, "Error: stack empty\n");
+	} else {
         S->size--;
+	}
 }
 
 
@@ -146,17 +149,21 @@ double evaluateOp(Stack *ops, Stack *vals) {
 			Stack_Pop(vals);
 			break;
 		case MINUS:
-			printf("MINUS: %f - %f\n", Stack_Top(vals), v);
+			//printf("MINUS: %f - %f\n", Stack_Top(vals), v);
 		    v = Stack_Top(vals) - v;
 			Stack_Pop(vals);
 			break;
 		case MUL:
-			printf("MUL: %f * %f\n", Stack_Top(vals), v);
+			//printf("MUL: %f * %f\n", Stack_Top(vals), v);
 		    v = Stack_Top(vals) * v;
 			Stack_Pop(vals);
 			break;
 		case DEL:
 		    v = Stack_Top(vals) / v;
+			Stack_Pop(vals);
+			break;
+		case EXP:
+		    v = exp(Stack_Top(vals));
 			Stack_Pop(vals);
 			break;
 		case SQRT:
@@ -181,24 +188,28 @@ double generateFormulaWithResult(int64_t number, int input) {
     //Stack_Push(&ops, 5);
 	//double d = Stack_Top(&ops);
 
-	//printf("Stack_Top: %llx\n", (int)d);
+	//printf("number: %llx\n", (int)number);
 	double res = 0;
 
 	while (number >= 1)
 	{
 	    int mod = number & 0xF;
 
-	    printf("bit iteration: %llx, mod: %x\n", number, mod);
+	    //printf("bit iteration: %llx, mod: %x\n", number, mod);
 	    number = number >> 4;
 
 		switch(mod) {
+			case 0:
+				//printf("push input: %x\n", mod);
+				Stack_Push(&vals, (double_t) input);
+				break;
 			case PLUS:
 			case MINUS:
 			case MUL:
 			case DEL:
 			case SQRT:
 			case POW:
-				printf("push operator: %x\n", mod);
+				//printf("push operator: %x\n", mod);
 				Stack_Push(&ops, (double_t) mod);
 				break;
 			case OPEN_BRACKET:
@@ -208,19 +219,19 @@ double generateFormulaWithResult(int64_t number, int input) {
 				Stack_Push(&vals, res);
 			    break; /* optional */
 			default:
-				printf("push digit: %x\n", mod);
+				//printf("push digit: %x\n", mod);
 				Stack_Push(&vals, (double_t) mod);
 				break;
 			}
 	}
 
 	res = evaluateOp(&ops, &vals);
-	printf("\nresult: %d\n\n", (int)res);
+	//printf("\nresult: %d", (int)res);
 
-    return 0;
+	return (int)res;
 }
 
-int runProgram3(int64_t number, int input, double output) {
+int runProgram(int64_t number, int input, double output) {
    	double result = generateFormulaWithResult(number, input);
 
 	if (output == result) {
@@ -230,7 +241,7 @@ int runProgram3(int64_t number, int input, double output) {
 	return 0;
 }
 
-int runProgram(int64_t number, int input, double output) {
+int runProgram2(int64_t number, int input, double output) {
 	char * formula = generateFormula(number, input);
 	double result = parse_expression(formula);
 
@@ -264,7 +275,8 @@ int main( int argc, char **argv ) {
 		{
 			char *formula = generateFormula(i, -1);
 			printf("RESULT FOUND !!! Value: %llx, Formula: %s\n", i, formula);
-			return 0;
+			//return 0;
+			//printf("RESULT FOUND !!! Value: %llx\n", i);
 		}
 
 		if (k >= REPORT_SIZE) {
