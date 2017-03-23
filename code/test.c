@@ -20,18 +20,18 @@ const char* SYMBOLS[] = {"N", "1", "2", "3", "4", "5", "exp", "log", "sqrt",
 			 "+", "-", "*", "/", "^",
 			 "(", ")"};
 
-const int INPUT[] = {5, 7, 10};
+const __int64_t INPUT[] = {5, 7, 10};
 const double OUTPUT[] = {11, 17, 29};
-const int REPORT_SIZE = 0xFFFFFF;
+const __int64_t REPORT_SIZE = 0xFFFFFF;
 
-const int END_POINT = 0xFFFFFFFFFFFF;
-const int START_POINT = 0x0;//58bffffff//0x1871fffffb;
+const __int64_t END_PO__int64_t = 0xFFFFFFFFFFF;
+const __int64_t START_PO__int64_t = 0x0;//58bffffff//0x1871fffffb;
 
 #define STACK_MAX 100
 
 struct Stack {
     double_t     data[STACK_MAX];
-    int     size;
+    __int64_t     size;
 };
 typedef struct Stack Stack;
 
@@ -70,12 +70,12 @@ void Stack_Pop(Stack *S)
 }
 
 
-int isNumberValid(int number) {
-	int last = -1;
+__int64_t isNumberValid(__int64_t number) {
+	__int64_t last = -1;
 
 	while (number >= 1)
 	{
-	    int mod = number & 0xF;
+	    __int64_t mod = number & 0xF;
 	    number = number >> 4;
 
 		if ((mod == last) && (mod < 0xE)) {
@@ -87,7 +87,7 @@ int isNumberValid(int number) {
 	return 1;
 }
 
-char* generateFormula(int number, int input) {
+char* generateFormula(__int64_t number, __int64_t input) {
 	char* str = malloc(100);
 	strcpy(str, "");
 
@@ -98,7 +98,7 @@ char* generateFormula(int number, int input) {
 	while (number >= 1)
 	{
 		//printf("bit iteration: %llx\n", number);
-	    int mod = number & 0xF;
+	    __int64_t mod = number & 0xF;
 	    number = number >> 4;
 
 		if (mod == 0x0)
@@ -125,7 +125,7 @@ double evaluateOp(Stack *ops, Stack *vals) {
     // Replace the top exp with its result.
     double v = Stack_Top(vals);
 	Stack_Pop(vals);
-	int op = (int)Stack_Top(ops);
+	__int64_t op = (__int64_t)Stack_Top(ops);
 	Stack_Pop(ops);
 
 	switch(op) {
@@ -165,7 +165,7 @@ double evaluateOp(Stack *ops, Stack *vals) {
     return v;
 }
 
-double generateFormulaWithResult(int number, int input) {
+double generateFormulaWithResult(__int64_t number, __int64_t input) {
 	Stack ops, vals;
 
 	Stack_Init(&ops);
@@ -174,12 +174,12 @@ double generateFormulaWithResult(int number, int input) {
     //Stack_Push(&ops, 5);
 	//double d = Stack_Top(&ops);
 
-	//printf("number: %llx\n", (int)number);
+	//printf("number: %llx\n", (__int64_t)number);
 	double res = 0;
 
 	while (number >= 1)
 	{
-	    int mod = number & 0xF;
+	    __int64_t mod = number & 0xF;
 
 	    //printf("bit iteration: %llx, mod: %x\n", number, mod);
 	    number = number >> 4;
@@ -212,12 +212,12 @@ double generateFormulaWithResult(int number, int input) {
 	}
 
 	res = evaluateOp(&ops, &vals);
-	//printf("\nresult: %d", (int)res);
+	//printf("\nresult: %d", (__int64_t)res);
 
-	return (int)res;
+	return (__int64_t)res;
 }
 
-int runProgram(int number, int input, double output) {
+__int64_t runProgram(__int64_t number, __int64_t input, double output) {
    	double result = generateFormulaWithResult(number, input);
 
 	if (output == result) {
@@ -227,7 +227,7 @@ int runProgram(int number, int input, double output) {
 	return 0;
 }
 /*
-int runProgram2(int number, int input, double output) {
+__int64_t runProgram2(__int64_t number, __int64_t input, double output) {
 	char * formula = generateFormula(number, input);
 	double result = parse_expression(formula);
 
@@ -239,7 +239,7 @@ int runProgram2(int number, int input, double output) {
 	return 0;
 }
 */
-int validate(int i) {
+__int64_t validate(__int64_t i) {
 	if ((isNumberValid(i) > 0) &&
 		(runProgram(i, INPUT[0], OUTPUT[0]) > 0) &&
 		(runProgram(i, INPUT[1], OUTPUT[1]) > 0) &&
@@ -252,10 +252,10 @@ int validate(int i) {
 
 int main( int argc, char **argv ) {
     double result = 0;
-    int k = 0;
+    __int64_t k = 0;
 
     printf("\n Starting... \n");
-    for (int i = START_POINT; i <= END_POINT; i++)
+    for (__int64_t i = START_PO__int64_t; i <= END_PO__int64_t; i++)
     {
 		if (validate(i) > 0)
 		{
