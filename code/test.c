@@ -2,7 +2,6 @@
 #include<stdio.h>
 #include<string.h>
 
-#include"expression_parser.h"
 
 /**
  @brief macro to compare values as computed by C to those computed by the parser. creates a scope, initializes the parser and parses the string, then prints the expression, C result and parsed result.  Does not handle the exponent operator '^', since it is not equivalent in C.
@@ -36,10 +35,10 @@ const char* SYMBOLS[] = {"N", "1", "2", "3", "4", "5", "exp", "log", "sqrt",
 
 const int INPUT[] = {5, 7, 10};
 const double OUTPUT[] = {11, 17, 29};
-const int64_t REPORT_SIZE = 0xFFFFFF;
+const int REPORT_SIZE = 0xFFFFFF;
 
-const int64_t END_POINT = 0xFFFFFFFFFFFF;
-const int64_t START_POINT = 0x0;//58bffffff//0x1871fffffb;
+const int END_POINT = 0xFFFFFFFFFFFF;
+const int START_POINT = 0x0;//58bffffff//0x1871fffffb;
 
 #define STACK_MAX 100
 
@@ -84,7 +83,7 @@ void Stack_Pop(Stack *S)
 }
 
 
-int isNumberValid(int64_t number) {
+int isNumberValid(int number) {
 	int last = -1;
 
 	while (number >= 1)
@@ -101,7 +100,7 @@ int isNumberValid(int64_t number) {
 	return 1;
 }
 
-char* generateFormula(int64_t number, int input) {
+char* generateFormula(int number, int input) {
 	char* str = malloc(100);
 	strcpy(str, "");
 
@@ -179,7 +178,7 @@ double evaluateOp(Stack *ops, Stack *vals) {
     return v;
 }
 
-double generateFormulaWithResult(int64_t number, int input) {
+double generateFormulaWithResult(int number, int input) {
 	Stack ops, vals;
 
 	Stack_Init(&ops);
@@ -231,7 +230,7 @@ double generateFormulaWithResult(int64_t number, int input) {
 	return (int)res;
 }
 
-int runProgram(int64_t number, int input, double output) {
+int runProgram(int number, int input, double output) {
    	double result = generateFormulaWithResult(number, input);
 
 	if (output == result) {
@@ -240,8 +239,8 @@ int runProgram(int64_t number, int input, double output) {
 
 	return 0;
 }
-
-int runProgram2(int64_t number, int input, double output) {
+/*
+int runProgram2(int number, int input, double output) {
 	char * formula = generateFormula(number, input);
 	double result = parse_expression(formula);
 
@@ -252,8 +251,8 @@ int runProgram2(int64_t number, int input, double output) {
 
 	return 0;
 }
-
-int validate(int64_t i) {
+*/
+int validate(int i) {
 	if ((isNumberValid(i) > 0) &&
 		(runProgram(i, INPUT[0], OUTPUT[0]) > 0) &&
 		(runProgram(i, INPUT[1], OUTPUT[1]) > 0) &&
@@ -266,10 +265,10 @@ int validate(int64_t i) {
 
 int main( int argc, char **argv ) {
     double result = 0;
-    int64_t k = 0;
+    int k = 0;
 
     printf("\n Starting... \n");
-    for (int64_t i = START_POINT; i <= END_POINT; i++)
+    for (int i = START_POINT; i <= END_POINT; i++)
     {
 		if (validate(i) > 0)
 		{
