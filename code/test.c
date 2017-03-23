@@ -2,19 +2,6 @@
 #include<stdio.h>
 #include<string.h>
 
-
-/**
- @brief macro to compare values as computed by C to those computed by the parser. creates a scope, initializes the parser and parses the string, then prints the expression, C result and parsed result.  Does not handle the exponent operator '^', since it is not equivalent in C.
-*/
-#define parser_check( expr ) printf( "Parsing: '%s'\n", #expr ); \
-        printf( "  C:      %f\n", expr ); \
-        printf( "  parser: %f\n\n", parse_expression( #expr ) );
-
-void parser_test( const char *expr ){
- double val = parse_expression( expr );
- printf( "%s=%f\n", expr, val );
-}
-
 #define EXP 0x6
 #define LOG 0x7
 #define SQRT 0x8
