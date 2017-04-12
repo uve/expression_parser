@@ -21,12 +21,12 @@ const char* SYMBOLS[] = {"N", "1", "2", "3", "4", "5", "exp", "log", "sqrt",
 			 "+", "-", "*", "/", "^",
 			 "(", ")"};
 
-const __int64_t INPUT[] = {5, 7, 10};
-const double OUTPUT[] = {11, 17, 29};
+const __int64_t INPUT[] = {5, 7, 10, 12};
+const double OUTPUT[] = {11, 17, 29, 37};
 const __int64_t REPORT_SIZE = 0xFFFFFF;
 
 const __int64_t END_POINT = 0xFFFFFFFFFFF;
-const __int64_t START_POINT = 0x0;//58bffffff//0x1871fffffb;
+const __int64_t START_POINT = 0x59f4bffffff;
 
 #define STACK_MAX 100
 
@@ -244,7 +244,8 @@ __int64_t validate(__int64_t i) {
 	if ((isNumberValid(i) > 0) &&
 		(runProgram(i, INPUT[0], OUTPUT[0]) > 0) &&
 		(runProgram(i, INPUT[1], OUTPUT[1]) > 0) &&
-		(runProgram(i, INPUT[2], OUTPUT[2]) > 0))
+		(runProgram(i, INPUT[2], OUTPUT[2]) > 0) &&
+		(runProgram(i, INPUT[3], OUTPUT[3]) > 0))
 	{
 	    return 1;
 	}
@@ -265,7 +266,7 @@ int main( int argc, char **argv ) {
 			char *formula = generateFormula(i, -1);
 
 			fprintf(stderr, "RESULT FOUND !!! Value: %llx, Formula: %s\n", i, formula);
-			//return 0;
+			return 0;
 		}
 
 		if (k >= REPORT_SIZE) {
